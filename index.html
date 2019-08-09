@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hero - Admin</title>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css">
+    <style>
+        .hero-list img {
+            width: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="page-header container">
+            <h1>海贼王 <small>角色管理器</small></h1>
+        </div>
+    </header>
+    <div class="container hero-list">
+        <a class="btn btn-success pull-right" href="/add">添加英雄</a>
+        <table class="table table-hover">
+            <thead>
+                <th>编号</th>
+                <th>名称</th>
+                <th>能力</th>
+                <th>团体</th>
+                <th>头像</th>
+                <th>操作</th>
+            </thead>
+            <tbody id="tbody">
+
+            </tbody>
+        </table>
+    </div>
+</body>
+<script>
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            var sz = JSON.parse(xhr.responseText);
+            var htmls = ''
+            for (var i = 0; i < sz.length; i++) {
+                htmls += `
+                    <tr>
+                        <td>${sz[i].id}<td>
+                        <td>${sz[i].name}<td>
+                        <td>${sz[i].nengli}<td>
+                        <td>${sz[i].jituan}<td>
+                        <td><img src="${sz[i].img}" alt="" srcset=""></td>
+                    <td>
+                        <a href="/getone?id=${sz[i].id}">查看</a>
+                        <a href="/edituser?id=${sz[i].id}">修改</a>
+                        <a href="" user_id="${sz[i].id}">删除</a>
+                    </td>
+                    </tr>`
+            }
+            // console.log(htmls)
+            document.getElementById('tbody').innerHTML = htmls
+        }
+    }
+    xhr.open('get', '/gers')
+    xhr.send()
+
+    document.getElementById('tbody').onclick = function (ev) {
+        ev.preventDefault();
+        var xhr=new XMLHttpRequest();
+        if (xhr.readyState == 4) {
+            if(xhr.responseText==1){
+                alert('删除成功')
+            }else{
+                alert('删除失败')
+            }
+        }
+        console.log(ev.target.getAttribute('user_id'))  
+
+        xhr.open('delete', '/sca?id=' + ev.target.getAttribute('user_id'))
+        xhr.send()
+        
+    }
+</script>
+
+
+</html>
